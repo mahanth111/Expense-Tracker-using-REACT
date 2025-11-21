@@ -7,7 +7,7 @@ import  History from './History';
 const Home = ({ transactions }) => {
 
   // Get only the last 5 transactions
-  const recentTransactions = transactions.slice(-5).reverse();
+const recentTransactions = transactions.slice(0, 5);
 
   return (
     <div
