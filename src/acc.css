@@ -147,11 +147,16 @@ h3 {
   color: #fff;
   margin-left: 10px;
 }
-.category-Food { background: #ff7675; }
-.category-Travel { background: #74b9ff; }
-.category-Shopping { background: #fd79a8; }
-.category-Bills { background: #ffeaa7; color: #333; }
-.category-Other { background: #55efc4; color: #333; }
+/* unified category tag styling; color set inline from React */
+.category-tag {
+  margin-left: 10px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
 
 /* Form Inputs */
 input[type='text'], input[type='number'], select {
