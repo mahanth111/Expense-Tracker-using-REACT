@@ -1,7 +1,7 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 
-const COLORS = ['#00cec9', '#fd79a8', '#ffeaa7', '#fab1a0', '#74b9ff'];
+const COLORS = ['#00cec9', '#fd79a8', '#ffeaa7', '#b6faa0ff', '#74b9ff'];
 
 export const Charts = ({ transactions }) => {
   const monthlyData = Array.from({ length: 12 }, (_, i) => {
@@ -43,7 +43,7 @@ export const Charts = ({ transactions }) => {
               <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="income" stroke="#2ecc71" />
-              <Line type="monotone" dataKey="expense" stroke="#c0392b" />
+              <Line type="monotone" dataKey="expense" stroke="#db2b17ff" />
             </LineChart>
           </ResponsiveContainer>
         </div>
