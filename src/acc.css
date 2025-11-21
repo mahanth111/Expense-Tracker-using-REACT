@@ -71,10 +71,22 @@ h3 {
   box-shadow: var(--box-shadow);
   padding: 20px;
   border-radius: 10px;
-  margin: 20px 0;
   text-align: center;
   transition: transform 0.2s ease;
+  max-height: 300px;
+  overflow: auto;
+  scrollbar-width: none;
 }
+.history-card{
+  background: var(--card-bg);
+  box-shadow: var(--box-shadow);
+  padding: 0 20px;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.2s ease;
+  max-height: 320px;
+  
+} 
 .balance-card:hover, .inc-exp-container:hover {
   transform: translateY(-2px);
 }
