@@ -1,9 +1,22 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
+  ResponsiveContainer
+} from 'recharts';
 
 const COLORS = ['#00cec9', '#fd79a8', '#ffeaa7', '#b6faa0ff', '#74b9ff'];
 
 export const Charts = ({ transactions }) => {
+
+  // -------- MONTHLY INCOME / EXPENSE LINE CHART DATA ----------
   const monthlyData = Array.from({ length: 12 }, (_, i) => {
     const month = i + 1;
     const monthTransactions = transactions.filter(
@@ -11,6 +24,7 @@ export const Charts = ({ transactions }) => {
     );
 
     const income = monthTransactions.filter(t => t.amount > 0).reduce((acc, t) => acc + t.amount, 0);
+
     const expense = monthTransactions.filter(t => t.amount < 0).reduce((acc, t) => acc + t.amount, 0) * -1;
 
     return {
@@ -20,6 +34,7 @@ export const Charts = ({ transactions }) => {
     };
   });
 
+  // -------- CATEGORY TOTALS FOR BAR CHART ----------
   const categoryTotals = {};
   transactions.forEach(t => {
     if (t.amount < 0) {
@@ -28,10 +43,14 @@ export const Charts = ({ transactions }) => {
     }
   });
 
-  const pieData = Object.entries(categoryTotals).map(([name, value]) => ({ name, value }));
+  const barData = Object.entries(categoryTotals).map(([name, value]) => ({
+    category: name,value,
+  }));
 
   return (
     <div className="charts-container">
+
+      {/* -------- LINE CHART -------- */}
       <div className="chart-box">
         <h3>Monthly Income & Expenses</h3>
         <div className="chart-inner">
@@ -49,21 +68,30 @@ export const Charts = ({ transactions }) => {
         </div>
       </div>
 
+      {/* -------- BAR CHART (EXPENSE BY CATEGORY) -------- */}
       <div className="chart-box">
         <h3>Expenses by Category</h3>
         <div className="chart-inner">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius="80%" label={(entry => entry.name)}>
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
+            <BarChart data={barData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="category" />
+              <YAxis />
               <Tooltip />
-            </PieChart>
+              <Legend />
+              <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                {barData.map((entry, index) => (
+                  <cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
+
     </div>
   );
 };
