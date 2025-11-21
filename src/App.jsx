@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import Home from './pages/Home';
 import AddExpense from './pages/AddExpense';
 import History from './pages/History';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Modal from './components/Modal';
+import { AddTransaction } from './components/AddTransaction';
 
 function App() {
   const [transactions, setTransactions] = useState([]);
   const [user, setUser] = useState(() => localStorage.getItem('user'));
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (user) localStorage.setItem('user', user);
@@ -17,6 +20,7 @@ function App() {
 
   const addTransaction = (transaction) => {
     setTransactions([transaction, ...transactions]);
+    setIsModalOpen(false); 
   };
 
   const deleteTransaction = (id) => {
@@ -30,8 +34,15 @@ function App() {
 
   return (
     <Router>
-      {user && <Navbar logout={logout} />}
+      {user && <Navbar logout={logout} openModal={() => setIsModalOpen(true)} />}
       <div className="container">
+
+        {isModalOpen && (
+          <Modal closeModal={() => setIsModalOpen(false)}>
+            <AddTransaction addTransaction={addTransaction} />
+          </Modal>
+        )}
+
         <Routes>
           {!user ? (
             <>
