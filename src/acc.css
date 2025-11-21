@@ -166,12 +166,44 @@ input[type='text'], input[type='number'], select {
   font-size: 16px;
   padding: 10px;
   width: 100%;
-  margin-bottom: 15px;
   transition: border 0.3s ease;
 }
 input:focus, select:focus {
   border-color: var(--primary);
   outline: none;
+}
+/* Add Transaction Form - Full Flex Center Layout */
+.add-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+  margin-bottom: 15px;
+}
+
+.add-form-container input,
+.add-form-container select {
+  width: 70%;
+  max-width: 350px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #dcdde1;
+  border-radius: 10px;
+  transition: border 0.3s ease;
+  margin-bottom: 10px;   /* This adds the spacing */
+}
+
+
+.add-form-container input:focus,
+.add-form-container select:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.add-form-container .btn {
+  width: 30%;
 }
 
 /* Buttons */

@@ -16,7 +16,7 @@ export const AddTransaction = ({ addTransaction }) => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
+<form className="add-form-container" onSubmit={onSubmit}>
       <h3>Add new transaction</h3>
       <input type="text" value={text} onChange={e => setText(e.target.value)} placeholder="Text" />
       <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Amount (negative for expense)" />
