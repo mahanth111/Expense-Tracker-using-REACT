@@ -8,11 +8,15 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Modal from './components/Modal';
 import { AddTransaction } from './components/AddTransaction';
+
 import './acc.css';
 
+// Firebase
+import { auth, db } from './firebase';
+import {
+  onAuthStateChanged
+} from "firebase/auth";
 
-// 🔥 Firebase imports
-import { db } from './firebase';
 import {
   collection,
   addDoc,
@@ -26,20 +30,26 @@ import {
 
 function App() {
   const [transactions, setTransactions] = useState([]);
-  const [user, setUser] = useState(() => localStorage.getItem('user'));
+  const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // ✅ Keep user in localStorage (same behavior as before)
+  // 🟩 Listen to Firebase Auth Login/Logout state
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', user);
-    } else {
-      localStorage.removeItem('user');
-      setTransactions([]); // clear transactions on logout
-    }
-  }, [user]);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser.uid);
+        localStorage.setItem("user", currentUser.uid);
+      } else {
+        setUser(null);
+        localStorage.removeItem("user");
+        setTransactions([]);
+      }
+    });
 
-  // ✅ Real-time listener to Firestore for this user's transactions
+    return () => unsubscribe();
+  }, []);
+
+  // 🟧 Load Firestore transactions when user logs in
   useEffect(() => {
     if (!user) return;
 
@@ -50,49 +60,49 @@ function App() {
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((d) => ({
-        id: d.id,       // Firestore document ID (used for delete)
-        ...d.data(),    // text, amount, category, createdAt...
+        id: d.id,
+        ...d.data()
       }));
+     console.log("Fetched transaction:", data);
+
       setTransactions(data);
     });
 
     return () => unsubscribe();
   }, [user]);
 
-  // ✅ Add transaction -> Firestore
+  // Add transaction
   const addTransaction = async (transaction) => {
     if (!user) return;
 
     try {
       await addDoc(collection(db, 'users', user, 'transactions'), {
         ...transaction,
-        createdAt: serverTimestamp(), // for ordering
+        createdAt: serverTimestamp(),
       });
+
       setIsModalOpen(false);
     } catch (error) {
-      console.error('Error adding transaction:', error);
+      console.error("Error adding transaction:", error);
     }
   };
 
-  // ✅ Delete transaction -> Firestore
+  // Delete transaction
   const deleteTransaction = async (id) => {
     if (!user) return;
 
     try {
-      await deleteDoc(doc(db, 'users', user, 'transactions', id));
+      console.log("Deleting transaction with id:", id, "for user:", localStorage.getItem('user'));
+      await deleteDoc(doc(db, 'users', localStorage.getItem('user'), 'transactions', String(id)));
     } catch (error) {
-      console.error('Error deleting transaction:', error);
+      console.error("Error deleting transaction:", error);
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
   };
 
   return (
     <Router>
-      {user && <Navbar logout={logout} openModal={() => setIsModalOpen(true)} />}
+      {user && <Navbar logout={() => setUser(null)} openModal={() => setIsModalOpen(true)} />}
+
       <div className="container">
         {isModalOpen && (
           <Modal closeModal={() => setIsModalOpen(false)}>
@@ -110,19 +120,8 @@ function App() {
           ) : (
             <>
               <Route path="/" element={<Home transactions={transactions} />} />
-              <Route
-                path="/add-expense"
-                element={<AddExpense addTransaction={addTransaction} />}
-              />
-              <Route
-                path="/history"
-                element={
-                  <History
-                    transactions={transactions}
-                    deleteTransaction={deleteTransaction}
-                  />
-                }
-              />
+              <Route path="/add-expense" element={<AddExpense addTransaction={addTransaction} />} />
+              <Route path="/history" element={<History transactions={transactions} deleteTransaction={deleteTransaction} />} />
               <Route path="*" element={<Navigate to="/" />} />
             </>
           )}

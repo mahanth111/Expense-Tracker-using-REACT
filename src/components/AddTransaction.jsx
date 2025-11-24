@@ -9,7 +9,7 @@ export const AddTransaction = ({ addTransaction }) => {
     e.preventDefault();
     if (!text || !amount || !category) return;
 
-    addTransaction({ id: Date.now(), text, amount: +amount, category });
+    addTransaction({ text, amount: +amount, category });
     setText('');
     setAmount('');
     setCategory('');

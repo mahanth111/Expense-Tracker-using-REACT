@@ -19,9 +19,11 @@ body {
 
 .container {
   width: 100%;
-  height: 90vh;
-  padding: 0 20px;
+  min-height: calc(100vh - 80px);
+  padding: 20px;
+  display: block; /* ⬅ remove flex centering effect */
 }
+
 
 h1, h2, h3, h4 { margin: 0; }
 
@@ -362,4 +364,14 @@ display: inline-block;
 .nav-link:hover {
 background: var(--primary-light);
 color: #fff;
+}
+
+.dashboard-layout {
+  width: 100%;
+  max-width: 1600px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 25px;
+  padding-bottom: 40px;
 }

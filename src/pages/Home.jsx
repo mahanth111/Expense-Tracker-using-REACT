@@ -43,4 +43,8 @@ const recentTransactions = transactions.slice(0, 5);
   );
 };
 
+<div className="dashboard-layout">
+  ...
+</div>
+
 export default Home;
