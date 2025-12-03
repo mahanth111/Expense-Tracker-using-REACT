@@ -49,7 +49,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // 🟧 Load Firestore transactions when user logs in
+  // Load Firestore transactions when user logs in
   useEffect(() => {
     if (!user) return;
 
