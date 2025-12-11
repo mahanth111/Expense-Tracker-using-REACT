@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 
-export const Navbar = ({ logout, openModal, openSubscriptionsModal }) => {
+export const Navbar = ({ logout, openModal, openSubscriptionsModal, openBudgetsModal }) => {
 
   const handleLogout = () => {
     signOut(auth)
@@ -20,29 +20,22 @@ export const Navbar = ({ logout, openModal, openSubscriptionsModal }) => {
       </h2>
 
       <ul>
-        {/* Home */}
-        <li>
-          <Link to="/" className="nav-link">Home</Link>
-        </li>
+        <li><Link to="/" className="nav-link">Home</Link></li>
+        <li><span onClick={openModal} className="nav-link">Add Expense</span></li>
 
-        {/* Add Expense MODAL */}
         <li>
-          <span onClick={openModal} className="nav-link">Add Expense</span>
-        </li>
-
-        {/* History PAGE */}
-        <li>
-          <Link to="/history" className="nav-link">History</Link>
-        </li>
-
-        {/* Subscriptions MODAL */}
-        <li>
-          <span onClick={openSubscriptionsModal} className="nav-link">
+          <span className="nav-link" onClick={openSubscriptionsModal}>
             Subscriptions
           </span>
         </li>
 
-        {/* Logout */}
+        <li>
+          <span className="nav-link" onClick={openBudgetsModal}>
+            Budgets
+          </span>
+        </li>
+        <li><Link to="/history" className="nav-link">History</Link></li>
+
         <li>
           <button className="logout-btn" onClick={handleLogout}>Logout</button>
         </li>
