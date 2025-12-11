@@ -20,8 +20,8 @@ const Login = ({ setUser }) => {
 
       const uid = userCredential.user.uid;
 
+      // We still set the user in parent state so UI updates immediately.
       setUser(uid);
-      localStorage.setItem("user", uid);
 
       navigate("/");
     } catch (error) {

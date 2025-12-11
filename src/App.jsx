@@ -33,15 +33,13 @@ function App() {
   const [user, setUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // 🟩 Listen to Firebase Auth Login/Logout state
+  // Listen to Firebase Auth Login/Logout state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
         setUser(currentUser.uid);
-        localStorage.setItem("user", currentUser.uid);
       } else {
         setUser(null);
-        localStorage.removeItem("user");
         setTransactions([]);
       }
     });
@@ -63,7 +61,6 @@ function App() {
         id: d.id,
         ...d.data()
       }));
-     console.log("Fetched transaction:", data);
 
       setTransactions(data);
     });
@@ -92,8 +89,7 @@ function App() {
     if (!user) return;
 
     try {
-      console.log("Deleting transaction with id:", id, "for user:", localStorage.getItem('user'));
-      await deleteDoc(doc(db, 'users', localStorage.getItem('user'), 'transactions', String(id)));
+      await deleteDoc(doc(db, 'users', user, 'transactions', String(id)));
     } catch (error) {
       console.error("Error deleting transaction:", error);
     }
