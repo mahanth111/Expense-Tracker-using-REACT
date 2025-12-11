@@ -16,34 +16,60 @@ import {
 
 import { getCategoryColor } from '../categoryColors';
 
+const getTransactionDate = (t) => {
+  if (!t) return null;
+
+  const created = t.createdAt;
+
+  if (!created) return null;
+
+  if (typeof created?.toDate === 'function') {
+    return created.toDate();
+  }
+
+  if (typeof created?.seconds === 'number') {
+    return new Date(created.seconds * 1000);
+  }
+
+  if (typeof created === 'string' || typeof created === 'number') {
+    const d = new Date(created);
+    if (!isNaN(d)) return d;
+  }
+
+  return null;
+};
+
 export const Charts = ({ transactions }) => {
 
+  // Build monthly buckets using transaction createdAt
   const monthlyData = Array.from({ length: 12 }, (_, i) => {
-    const month = i + 1;
-    const monthTransactions = transactions.filter(
-      t => new Date(t.id).getMonth() + 1 === month
-    );
-
-    const income = monthTransactions
-      .filter(t => t.amount > 0)
-      .reduce((acc, t) => acc + t.amount, 0);
-
-    const expense = monthTransactions
-      .filter(t => t.amount < 0)
-      .reduce((acc, t) => acc + t.amount, 0) * -1;
-
     return {
       month: new Date(0, i).toLocaleString('default', { month: 'short' }),
-      income,
-      expense,
+      income: 0,
+      expense: 0,
     };
+  });
+
+  transactions.forEach(t => {
+    const date = getTransactionDate(t);
+
+    if (!date) return;
+
+    const monthIndex = date.getMonth(); // 0..11
+    if (monthIndex < 0 || monthIndex > 11) return;
+
+    if (t.amount > 0) {
+      monthlyData[monthIndex].income += Number(t.amount) || 0;
+    } else {
+      monthlyData[monthIndex].expense += Math.abs(Number(t.amount) || 0);
+    }
   });
 
   const categoryTotals = {};
   transactions.forEach(t => {
     if (t.amount < 0) {
       const cat = t.category || 'Other';
-      categoryTotals[cat] = (categoryTotals[cat] || 0) + Math.abs(t.amount);
+      categoryTotals[cat] = (categoryTotals[cat] || 0) + Math.abs(Number(t.amount) || 0);
     }
   });
 
