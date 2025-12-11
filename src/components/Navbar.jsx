@@ -3,16 +3,12 @@ import { Link } from 'react-router-dom';
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 
-export const Navbar = ({ logout, openModal }) => {
+export const Navbar = ({ logout, openModal, openSubscriptionsModal }) => {
 
   const handleLogout = () => {
     signOut(auth)
-      .then(() => {
-        logout();  // clears local user and resets App state
-      })
-      .catch((error) => {
-        console.error("Logout Error:", error);
-      });
+      .then(() => logout())
+      .catch((error) => console.error("Logout Error:", error));
   };
 
   return (
@@ -24,15 +20,31 @@ export const Navbar = ({ logout, openModal }) => {
       </h2>
 
       <ul>
-        <li><Link to="/" className="nav-link">Home</Link></li>
+        {/* Home */}
+        <li>
+          <Link to="/" className="nav-link">Home</Link>
+        </li>
+
+        {/* Add Expense MODAL */}
         <li>
           <span onClick={openModal} className="nav-link">Add Expense</span>
         </li>
-        <li><Link to="/history" className="nav-link">History</Link></li>
+
+        {/* History PAGE */}
         <li>
-          <button className="logout-btn" onClick={handleLogout}>
-            Logout
-          </button>
+          <Link to="/history" className="nav-link">History</Link>
+        </li>
+
+        {/* Subscriptions MODAL */}
+        <li>
+          <span onClick={openSubscriptionsModal} className="nav-link">
+            Subscriptions
+          </span>
+        </li>
+
+        {/* Logout */}
+        <li>
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
         </li>
       </ul>
     </nav>
