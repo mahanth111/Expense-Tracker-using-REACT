@@ -336,7 +336,7 @@ input:focus, select:focus {
 /* Modal Content Box */
 .modal-box {
   background: white;
-  padding: 25px;
+  padding: 10px;
   width: 90%;
   max-width: 450px;
   border-radius: 12px;

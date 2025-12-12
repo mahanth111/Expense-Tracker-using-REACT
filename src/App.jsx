@@ -298,6 +298,7 @@ function App() {
       <div className="container">
         {/* ADD EXPENSE MODAL */}
         {isModalOpen && (
+          
           <Modal closeModal={() => setIsModalOpen(false)}>
             <AddTransaction
               addTransaction={addTransaction}
