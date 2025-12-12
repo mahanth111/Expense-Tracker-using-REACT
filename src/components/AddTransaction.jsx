@@ -87,10 +87,10 @@ export const AddTransaction = ({ addTransaction, addSubscription }) => {
     // create transaction record (category "Subscriptions")
     try {
       await addTransaction?.({
-        text: subName,
-        amount: +numericAmount,
-        category: "Subscriptions",
-      });
+      text: subName,
+      amount: -Math.abs(numericAmount), // ALWAYS expense
+      category: "Subscriptions",
+    });
     } catch (err) {
       console.error("Error adding subscription transaction:", err);
     }
