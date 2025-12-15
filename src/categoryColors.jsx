@@ -5,7 +5,8 @@ export const CATEGORY_COLORS = {
   Shopping: "#fd79a8",
   Bills: "#ffeaa7",
   Entertainment: "#b6faa0",
-  Other: "#a29bfe"
+  Other: "#a29bfe",
+  Subscriptions: "#bdc3c7"   // <<< NEW: Grey color
 };
 
 // helper: returns color (fallback to Other)
