@@ -341,7 +341,7 @@ export default function RazorpayClone() {
                       type="text"
                       value={cardNumber}
                       onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
-                      placeholder="1234 5678 9012 3456"
+                      placeholder="1234 5678 9011 1213"
                       maxLength="19"
                       style={styles.input}
                       onFocus={(e) => e.target.style.outline = '2px solid #3b82f6'}
