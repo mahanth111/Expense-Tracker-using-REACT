@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
-/*CSS variables*/
 :root {
   --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   --primary: #6C5CE7;
@@ -20,8 +19,8 @@ body {
 .container {
   width: 100%;
   min-height: calc(100vh - 80px);
-  padding: 20px;
-  display: block; /* ⬅ remove flex centering effect */
+  padding: 15px;
+  display: block;
 }
 
 
@@ -150,7 +149,7 @@ h3 {
   color: #fff;
   margin-left: 10px;
 }
-/* unified category tag styling; color set inline from React */
+
 .category-tag {
   margin-left: 10px;
   padding: 2px 8px;
@@ -195,7 +194,7 @@ input:focus, select:focus {
   border: 1px solid #dcdde1;
   border-radius: 10px;
   transition: border 0.3s ease;
-  margin-bottom: 10px;   /* This adds the spacing */
+  margin-bottom: 10px;
 }
 
 
