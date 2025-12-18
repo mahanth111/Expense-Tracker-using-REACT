@@ -8,7 +8,7 @@ export const Balance = ({ transactions }) => {
     <>
       <h4>Your Balance</h4>
       <h1>
-        $<CountUp end={parseFloat(total)} duration={1.5} decimals={2} />
+        ₹<CountUp end={parseFloat(total)} duration={1.5} decimals={2} />
       </h1>
     </>
   );

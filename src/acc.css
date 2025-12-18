@@ -375,3 +375,47 @@ color: #fff;
   gap: 25px;
   padding-bottom: 40px;
 }
+
+/* Transaction right-side (delete + date) */
+.txn-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+}
+
+/* Vertical separator */
+.txn-separator {
+  color: #bbb;
+  font-size: 14px;
+  margin: 0 4px;
+}
+
+.txn-date {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+
+/* Make each transaction row a grid */
+.list li {
+  display: grid;
+  grid-template-columns: 1fr 120px auto;
+  align-items: center;
+}
+
+/* Amount column (fixed width & aligned) */
+.txn-amount {
+  text-align: right;        /* 👈 centers amount */
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Right side (delete + date) */
+.txn-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}

@@ -2,12 +2,12 @@ import React from 'react';
 import { Balance } from '../components/Balance';
 import { IncomeExpenses } from '../components/IncomeExpenses';
 import { Charts } from '../components/Charts';
-import  History from './History';
+import { TransactionList } from '../components/TransactionList';
 
 const Home = ({ transactions }) => {
 
   // Get only the last 5 transactions
-const recentTransactions = transactions.slice(0, 5);
+  const recentTransactions = transactions.slice(0, 5);
 
   return (
     <div
@@ -31,7 +31,11 @@ const recentTransactions = transactions.slice(0, 5);
 
         {/* HISTORY CARD */}
         <div className="history-card">
-          <History transactions={recentTransactions} heading="Recent History" />
+          <TransactionList 
+            transactions={recentTransactions} 
+            deleteTransaction={() => {}} 
+            heading="Recent History" 
+          />
         </div>
       </div>
 
@@ -42,9 +46,5 @@ const recentTransactions = transactions.slice(0, 5);
     </div>
   );
 };
-
-<div className="dashboard-layout">
-  ...
-</div>
 
 export default Home;
