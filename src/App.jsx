@@ -12,6 +12,7 @@ import Modal from "./components/Modal";
 import { AddTransaction } from "./components/AddTransaction";
 import SubscriptionsModal from "./components/SubscriptionsModal";
 import BudgetModal from "./components/BudgetModal";
+import RazorpayClone from "./components/RazorpayClone";
 
 import "./acc.css";
 
@@ -32,24 +33,23 @@ import {
 } from "firebase/firestore";
 
 function App() {
-  // ------------------- STATES -------------------
   const [transactions, setTransactions] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
   const [budgets, setBudgets] = useState({});
   const [user, setUser] = useState(null);
 
-  // modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubscriptionsModalOpen, setIsSubscriptionsModalOpen] = useState(false);
   const [isBudgetsModalOpen, setIsBudgetsModalOpen] = useState(false);
 
-  // alerts
-  const [subAlerts, setSubAlerts] = useState([]); // array of upcoming subscription alerts
+  const [subAlerts, setSubAlerts] = useState([]);
   const [budgetAlert, setBudgetAlert] = useState(null);
+
+  const [fakePayItem, setFakePayItem] = useState(null);
 
   const REMINDER_DAYS = 3;
 
-  // --------------- AUTH LISTENER ----------------
+  // AUTH LISTENER
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (currentUser) {
@@ -65,7 +65,7 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // ---------------- LOAD TRANSACTIONS ----------------
+  // LOAD TRANSACTIONS
   useEffect(() => {
     if (!user) return;
 
@@ -81,7 +81,7 @@ function App() {
     return () => unsubscribe();
   }, [user]);
 
-  // ---------------- LOAD SUBSCRIPTIONS ----------------
+  // LOAD SUBSCRIPTIONS
   useEffect(() => {
     if (!user) return;
 
@@ -94,7 +94,7 @@ function App() {
     return () => unsubscribe();
   }, [user]);
 
-  // ---------------- LOAD BUDGETS ----------------
+  // LOAD BUDGETS
   useEffect(() => {
     if (!user) return;
 
@@ -111,13 +111,13 @@ function App() {
     return () => unsub();
   }, [user]);
 
-  // --------------- SUBSCRIPTION ALERTS ----------------
+  // PARSE DATE
   const parseDate = (v) => {
     const d = new Date(v);
     return isNaN(d) ? null : d;
   };
 
-  // compute all upcoming subscriptions within REMINDER_DAYS that are not muted
+  // SUBSCRIPTION ALERTS
   useEffect(() => {
     if (!subscriptions || subscriptions.length === 0) {
       setSubAlerts([]);
@@ -146,16 +146,11 @@ function App() {
         nextRenewal: item.s.nextRenewal,
         daysLeft: item.daysLeft,
       }));
-
+ 
     setSubAlerts(upcomingList);
   }, [subscriptions]);
 
-  const handleSubOkay = () => {
-    // just close the modal; because we didn't persist anything, reminders will reappear next refresh
-    setSubAlerts([]);
-  };
-
-  // Set mutedUntil to end of the renewal day (23:59:59.999) in ISO format
+  // Handle one completed
   const handleSubCompleted = async (id) => {
     if (!user || !id) return;
     try {
@@ -173,23 +168,24 @@ function App() {
         mutedUntil: mutedUntilISO,
       });
 
-      // remove from current visible alerts immediately
       setSubAlerts((prev) => prev.filter((a) => a.id !== id));
     } catch (err) {
       console.error("Error muting subscription alert:", err);
     }
   };
 
-  // optional: mute all visible alerts at once
+  // Handle ALL completed
   const handleSubCompletedAll = async () => {
-    if (!user || !subAlerts?.length) return;
+    if (!user || !subAlerts.length) return;
     try {
       const updates = subAlerts.map(async (a) => {
         const item = subscriptions.find((s) => s.id === a.id);
         if (!item || !item.nextRenewal) return null;
+
         const next = new Date(item.nextRenewal);
         next.setHours(23, 59, 59, 999);
         const mutedUntilISO = next.toISOString();
+
         return updateDoc(doc(db, "users", user, "subscriptions", a.id), {
           mutedUntil: mutedUntilISO,
         });
@@ -198,12 +194,11 @@ function App() {
       await Promise.all(updates);
       setSubAlerts([]);
     } catch (err) {
-      console.error("Error muting all subscription alerts:", err);
+      console.error("Error muting all alerts:", err);
     }
   };
 
-  // ------------------ BUDGET FUNCTIONS ------------------
-
+  // BUDGET FUNCTIONS
   const setBudget = async (category, amount) => {
     await setDoc(doc(db, "users", user, "budgets", category), { amount });
   };
@@ -212,8 +207,7 @@ function App() {
     await deleteDoc(doc(db, "users", user, "budgets", category));
   };
 
-  // ------------------ BUDGET ALERT CHECK ------------------
-
+  // BUDGET CHECK
   const checkBudgetAfterAdd = (newTx) => {
     if (!newTx?.category) return;
 
@@ -252,7 +246,7 @@ function App() {
     }
   };
 
-  // ---------------- ADD TRANSACTION ----------------
+  // ADD TRANSACTION
   const addTransaction = async (transaction) => {
     if (!user) return;
 
@@ -265,12 +259,12 @@ function App() {
     setIsModalOpen(false);
   };
 
-  // ---------------- DELETE TRANSACTION ----------------
+  // DELETE TRANSACTION
   const deleteTransaction = async (id) => {
     await deleteDoc(doc(db, "users", user, "transactions", id));
   };
 
-  // ---------------- SUBSCRIPTIONS CRUD ----------------
+  // SUBSCRIPTIONS CRUD
   const addSubscription = async (data) => {
     await addDoc(collection(db, "users", user, "subscriptions"), data);
   };
@@ -283,7 +277,6 @@ function App() {
     await deleteDoc(doc(db, "users", user, "subscriptions", id));
   };
 
-  // ---------------- RENDER APP ----------------
   return (
     <Router>
       {user && (
@@ -296,9 +289,8 @@ function App() {
       )}
 
       <div className="container">
-        {/* ADD EXPENSE MODAL */}
+        {/* ADD TRANSACTION MODAL */}
         {isModalOpen && (
-          
           <Modal closeModal={() => setIsModalOpen(false)}>
             <AddTransaction
               addTransaction={addTransaction}
@@ -307,7 +299,7 @@ function App() {
           </Modal>
         )}
 
-        {/* SUBSCRIPTIONS MODAL */}
+        {/* SUBSCRIPTIONS LIST MODAL */}
         {isSubscriptionsModalOpen && (
           <Modal closeModal={() => setIsSubscriptionsModalOpen(false)}>
             <SubscriptionsModal
@@ -321,12 +313,16 @@ function App() {
         {/* BUDGET MODAL */}
         {isBudgetsModalOpen && (
           <Modal closeModal={() => setIsBudgetsModalOpen(false)}>
-            <BudgetModal budgets={budgets} setBudget={setBudget} deleteBudget={deleteBudget} />
+            <BudgetModal
+              budgets={budgets}
+              setBudget={setBudget}
+              deleteBudget={deleteBudget}
+            />
           </Modal>
         )}
 
-        {/* SUBSCRIPTION ALERT (list all qualifying subscriptions) */}
-        {subAlerts && subAlerts.length > 0 && (
+        {/* SUBSCRIPTION ALERT MODAL */}
+        {subAlerts.length > 0 && (
           <Modal closeModal={() => setSubAlerts([])}>
             <div style={{ textAlign: "center", maxWidth: 640, margin: "0 auto" }}>
               <h3>Subscription reminders</h3>
@@ -352,7 +348,7 @@ function App() {
                       <div style={{ fontSize: 13, color: "#555" }}>
                         ₹{Number(a.amount).toFixed(2)} — in {a.daysLeft}{" "}
                         {a.daysLeft === 1 ? "day" : "days"} (
-                        {new Date(a.nextRenewal).toLocaleDateString()})
+                        {new Date(a.nextRenewal).toLocaleDateString()} )
                       </div>
                     </div>
 
@@ -360,13 +356,21 @@ function App() {
                       <button className="btn" onClick={() => handleSubCompleted(a.id)}>
                         Completed
                       </button>
+
+                      <button
+                        className="btn"
+                        style={{ background: "#2ecc71" }}
+                        onClick={() => setFakePayItem(a)}
+                      >
+                        Pay
+                      </button>
                     </div>
                   </li>
                 ))}
               </ul>
 
               <div style={{ marginTop: 12, display: "flex", gap: 8, justifyContent: "center" }}>
-                <button className="btn" onClick={handleSubOkay}>
+                <button className="btn" onClick={() => setSubAlerts([])}>
                   Okay
                 </button>
                 <button className="btn" onClick={handleSubCompletedAll}>
@@ -377,12 +381,18 @@ function App() {
           </Modal>
         )}
 
+        {/* FAKE RAZORPAY PAYMENT MODAL */}
+        {fakePayItem && (
+          <Modal closeModal={() => setFakePayItem(null)}>
+          <RazorpayClone />
+          </Modal>
+        )}
+
         {/* BUDGET ALERT */}
         {budgetAlert && (
           <Modal closeModal={() => setBudgetAlert(null)}>
             <div style={{ textAlign: "center" }}>
               <h3>{budgetAlert.type === "exceeded" ? "Budget Exceeded!" : "Budget Warning"}</h3>
-
               <p>
                 Category: <strong>{budgetAlert.category}</strong>
               </p>
@@ -390,7 +400,6 @@ function App() {
                 Spent: <strong>₹{budgetAlert.total}</strong> / Limit:{" "}
                 <strong>₹{budgetAlert.limit}</strong>
               </p>
-
               <button className="btn" onClick={() => setBudgetAlert(null)}>
                 OK
               </button>
