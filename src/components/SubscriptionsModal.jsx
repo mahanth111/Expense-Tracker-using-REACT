@@ -4,6 +4,7 @@ const SubscriptionsModal = ({
   subscriptions,
   updateSubscription,
   deleteSubscription,
+  onPay,
 }) => {
   return (
     <div style={{ maxHeight: "70vh", overflowY: "auto", padding: "5px" }}>
@@ -17,18 +18,34 @@ const SubscriptionsModal = ({
             key={s.id}
             style={{
               padding: "10px 0",
-              borderBottom: "1px solid #ddd"
+              borderBottom: "1px solid #ddd",
             }}
           >
             <strong>{s.name}</strong> — ₹{s.amount} ({s.cycle})
             <br />
             Next renewal: {new Date(s.nextRenewal).toDateString()}
 
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <button
+                className="btn"
+                onClick={() => onPay && onPay(s)}
+              >
+                Pay
+              </button>
+
               <button
                 className="btn"
                 onClick={() => {
-                  const newDate = prompt("Enter new renewal date", s.nextRenewal);
+                  const newDate = prompt(
+                    "Enter new renewal date",
+                    s.nextRenewal
+                  );
                   if (newDate) {
                     updateSubscription(s.id, {
                       nextRenewal: newDate,

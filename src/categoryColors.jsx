@@ -7,6 +7,5 @@ export const CATEGORY_COLORS = {
   Subscriptions: "#bdc3c7"
 };
 
-// helper: returns color (fallback to Other)
 export const getCategoryColor = (category) =>
   CATEGORY_COLORS[category] || CATEGORY_COLORS["Other"];

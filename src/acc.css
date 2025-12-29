@@ -407,7 +407,7 @@ color: #fff;
 
 /* Amount column (fixed width & aligned) */
 .txn-amount {
-  text-align: right;        /* 👈 centers amount */
+  text-align: right;       
   font-weight: 600;
   white-space: nowrap;
 }

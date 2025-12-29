@@ -1,5 +1,4 @@
 import React from 'react';
-
 const Modal = ({ children, closeModal }) => {
   return (
     <div className="modal-overlay" onClick={closeModal}>

@@ -1,4 +1,3 @@
-// src/components/Charts.jsx
 import React from 'react';
 import {
   LineChart,
@@ -41,7 +40,6 @@ const getTransactionDate = (t) => {
 
 export const Charts = ({ transactions }) => {
 
-  // Build monthly buckets using transaction createdAt
   const monthlyData = Array.from({ length: 12 }, (_, i) => {
     return {
       month: new Date(0, i).toLocaleString('default', { month: 'short' }),

@@ -239,7 +239,7 @@ export default function RazorpayClone() {
       setProcessing(false);
       alert('Payment Successful! ✓\nThis is a demo payment.');
       setShowModal(false);
-      // Reset form
+      onClose?.();
       setCardNumber('');
       setExpiry('');
       setCvv('');
@@ -322,7 +322,7 @@ export default function RazorpayClone() {
                   onClick={() => setActiveMethod('netbanking')}
                   style={styles.tab(activeMethod === 'netbanking')}
                   onMouseEnter={(e) => {
-                    if (activeMethod !== 'netbanking') e.target.style.color = '#1f2937';
+                    if (activeMethod !== 'netbanking') e.target.style4.color = '#1f2937';
                   }}
                   onMouseLeave={(e) => {
                     if (activeMethod !== 'netbanking') e.target.style.color = '#4b5563';

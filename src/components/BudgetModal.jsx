@@ -17,12 +17,10 @@ const BudgetModal = ({ budgets, setBudget, deleteBudget }) => {
   return (
     <div style={{ maxHeight: "70vh", overflowY: "auto", padding: "10px" }}>
 
-      {/* Heading */}
       <h2 style={{ marginBottom: "15px", textAlign: "center" }}>
         Monthly Budgets
       </h2>
 
-      {/* Add Budget Box */}
       <div
         style={{
           background: "rgba(255,255,255,0.08)",
@@ -87,7 +85,6 @@ const BudgetModal = ({ budgets, setBudget, deleteBudget }) => {
         </form>
       </div>
 
-      {/* Budget List */}
       <h3 style={{ marginBottom: "10px" }}>Your Budgets</h3>
 
       {Object.keys(budgets).length === 0 && (
@@ -125,7 +122,6 @@ const BudgetModal = ({ budgets, setBudget, deleteBudget }) => {
                 </p>
               </div>
 
-              {/* Action buttons */}
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <button
                   className="btn"

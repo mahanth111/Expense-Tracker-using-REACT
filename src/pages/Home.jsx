@@ -6,7 +6,6 @@ import { TransactionList } from '../components/TransactionList';
 
 const Home = ({ transactions }) => {
 
-  // Get only the last 5 transactions
   const recentTransactions = transactions.slice(0, 5);
 
   return (
@@ -20,16 +19,13 @@ const Home = ({ transactions }) => {
         padding: "20px",
       }}
     >
-      {/* LEFT SIDE */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "20px" }}>
 
-        {/* BALANCE + INCOME/EXPENSES CARD */}
         <div className="balance-card">
           <Balance transactions={transactions} />
           <IncomeExpenses transactions={transactions} />
         </div>
 
-        {/* HISTORY CARD */}
         <div className="history-card">
           <TransactionList 
             transactions={recentTransactions} 
@@ -39,7 +35,6 @@ const Home = ({ transactions }) => {
         </div>
       </div>
 
-      {/* RIGHT SIDE — CHARTS */}
       <div style={{ flex: 2 }}>
         <Charts transactions={transactions} />
       </div>

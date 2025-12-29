@@ -4,7 +4,6 @@ import { TransactionList } from '../components/TransactionList';
 const History = ({ transactions, deleteTransaction }) => {
   const [filter, setFilter] = useState('all');
 
-  // Filter transactions based on selected period
   const getFilteredTransactions = () => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -53,7 +52,6 @@ const History = ({ transactions, deleteTransaction }) => {
 
   return (
     <div>
-      {/* Filter Buttons */}
       <div style={{
         display: 'flex',
         justifyContent: 'flex-end',
@@ -136,14 +134,12 @@ const History = ({ transactions, deleteTransaction }) => {
         </button>
       </div>
 
-      {/* Transaction List */}
       <TransactionList 
         transactions={filteredTransactions} 
         deleteTransaction={deleteTransaction} 
         heading="History" 
       />
 
-      {/* No transactions message */}
       {filteredTransactions.length === 0 && (
         <div style={{
           textAlign: 'center',

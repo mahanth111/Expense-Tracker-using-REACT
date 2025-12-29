@@ -1,4 +1,3 @@
-// src/components/Transaction.jsx
 import React from "react";
 import { getCategoryColor } from "../categoryColors";
 
@@ -50,11 +49,10 @@ export const Transaction = ({ transaction, deleteTransaction, isDelete }) => {
       className={transaction.amount < 0 ? "minus" : "plus"}
       style={liStyle}
     >
-      {/* LEFT SIDE — FORCE LEFT ALIGN IN RECENT HISTORY */}
       <div
         style={{
           textAlign: "left",
-          flex: isDelete ? "initial" : 1, // 🔑 key fix
+          flex: isDelete ? "initial" : 1,
         }}
       >
         {transaction.text}
@@ -65,12 +63,10 @@ export const Transaction = ({ transaction, deleteTransaction, isDelete }) => {
         )}
       </div>
 
-      {/* AMOUNT */}
       <span className="txn-amount">
         {sign}₹{Math.abs(transaction.amount)}
       </span>
 
-      {/* RIGHT SIDE (Delete + Date) — ONLY IN FULL HISTORY */}
       {isDelete && (
         <div className="txn-right">
           <button
