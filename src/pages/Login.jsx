@@ -20,7 +20,6 @@ const Login = ({ setUser }) => {
 
       const uid = userCredential.user.uid;
 
-      // We still set the user in parent state so UI updates immediately.
       setUser(uid);
 
       navigate("/");
